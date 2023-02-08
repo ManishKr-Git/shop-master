@@ -19,5 +19,11 @@ pipeline {
             url: 'https://github.com/ManishKr-Git/shop-master.git']]])
         }
       }
-  }
+
+      stage('Reading properties file') {
+        steps{
+            script {data = readYaml file: 'cicd/pipeline-properties.yaml'}
+            echo "loading file...."
+        }
+      }
 }
