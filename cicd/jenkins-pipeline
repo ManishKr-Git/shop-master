@@ -1,16 +1,22 @@
 pipeline {
   agent any
 
+  def tagName="latest"
+  def branchName="master"
+
   environment {
     EMAIL_RECIPIENTS = 'mk.choumiyan@gmail.com'
   }
 
   stages {
-      stage('Build') {
+      stage('Checkout') {
         steps {
-          dir('backend-app/shop-manager') {
-            sh 'mvn clean install'
-          }
+            echo "***Branch:"+branchName+"***"
+            echo "***Tag:"+tagName+"***"
+            //checkout SCM
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false,
+            extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-credentials',
+            url: 'https://github.com/ManishKr-Git/shop-master.git']]])
         }
       }
   }
