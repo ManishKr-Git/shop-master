@@ -1,8 +1,9 @@
+@Library('devopspipeline-library@master') _
+def tagName="latest"
+def branchName="master"
+
 pipeline {
   agent any
-
-  def tagName="latest"
-  def branchName="master"
 
   environment {
     EMAIL_RECIPIENTS = 'mk.choumiyan@gmail.com'
