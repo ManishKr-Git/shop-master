@@ -1,4 +1,3 @@
-@Library('devopspipeline-library@master') _
 def tagName="latest"
 def branchName="master"
 
