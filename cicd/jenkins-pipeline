@@ -29,7 +29,7 @@ pipeline {
 
       stage('BUILD'){
         steps{
-            echo "Building ${data.parent.projectName"
+            echo "Building ${data.parent.projectName}"
             dir("backend-app/shop-manager/"){
                 sh './mvnw clean install'
                 echo "loading file...."
