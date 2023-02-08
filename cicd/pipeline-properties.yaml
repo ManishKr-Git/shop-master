@@ -1,0 +1,6 @@
+parent:
+  projectName: shop-master
+maven:
+  javaHome: $JAVA_HOME_ZULU8_X64
+  mvnHome: /usr/share/maven
+  pomFile: pom.xml
