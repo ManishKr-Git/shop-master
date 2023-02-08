@@ -12,7 +12,7 @@ pipeline {
   stages {
       stage('Build') {
         steps {
-          dir('backend') {
+          dir('backend-app/shop-manager') {
             sh 'mvn clean install'
           }
         }
