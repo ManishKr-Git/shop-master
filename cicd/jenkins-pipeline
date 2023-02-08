@@ -1,43 +1,21 @@
 pipeline {
   agent any
 
+  tools{
+    maven "MAVEN_HOME"
+  }
+
+  environment {
+    EMAIL_RECIPIENTS = 'mk.choumiyan@gmail.com'
+  }
+
   stages {
-    stage('Build') {
-      steps {
-        sh 'mvn clean install'
-      }
-    }
-
-    stage('Build Docker Image') {
-      steps {
-        script {
-          def image = docker.build("spring-boot-app")
-        }
-      }
-    }
-
-    stage('Push Docker Image') {
-      steps {
-        withCredentials([aws(credentialsId: 'aws-ecr', region: 'us-west-2')]) {
-          script {
-            def registry = "012345678910.dkr.ecr.us-west-2.amazonaws.com"
-            def repository = "spring-boot-app"
-            def tag = "${env.BUILD_ID}"
-            def image = "${registry}/${repository}:${tag}"
-            sh "docker tag spring-boot-app ${image}"
-            sh "docker push ${image}"
+      stage('Build') {
+        steps {
+          dir('backend') {
+            sh 'mvn clean install'
           }
         }
       }
-    }
-
-    stage('Deploy to EKS') {
-      steps {
-        withCredentials([aws(credentialsId: 'aws-eks', region: 'us-west-2')]) {
-          sh 'aws eks update-kubeconfig --name my-eks-cluster'
-          sh 'kubectl apply -f deployment.yml'
-        }
-      }
-    }
   }
 }
