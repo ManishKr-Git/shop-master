@@ -37,5 +37,30 @@ pipeline {
             echo "Build is successful"
         }
       }
+
+      stage('Create Dockerfile') {
+                  steps {
+                      script {
+                          def backend = "${data.parent.projectName}/backend-app/shop-manager/"
+                          def dockerFile = "Dockerfile"
+                          writeFile file: "${dockerFile}", text: """
+                              FROM openjdk:8-jdk-alpine
+                              WORKDIR /app
+                              COPY backend-app/shop-manager/target/${backend}.jar ${backend}.jar
+                              ENTRYPOINT ["java","-jar","${backend}.jar"]
+                          """
+                      }
+                  }
+              }
+
+              stage('Build Docker Image') {
+                  steps {
+                      script {
+                          def imageTag = "${data.parent.imageTag}"
+                          def image = "${registry}/${repoName}:${imageTag}"
+                          sh "docker build -t ${image} ."
+                      }
+                  }
+              }
   }
 }
