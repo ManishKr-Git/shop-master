@@ -43,7 +43,7 @@ pipeline {
             script {
             dir("backend-app/shop-manager/"){
                 def image = "shop-master:${tagName}"
-                bat "docker build -t ${image} ."
+                bat "docker build -t latest/shop-master-1.0 ."
                 }
                   }
               }
