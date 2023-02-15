@@ -1,4 +1,4 @@
 FROM openjdk:8-jdk-alpine
 WORKDIR /app
-COPY target/*.jar deployments/shop-master-1.0.jar
+ADD target/*.jar deployments/shop-master-1.0.jar
 ENTRYPOINT ["java","-jar","deployments/shop-master-1.0.jar"]
