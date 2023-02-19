@@ -42,9 +42,8 @@ pipeline {
         steps {
             script {
             dir("backend-app/shop-manager/"){
-                def image = %data.development.imageRepo%+":"+%tagName%
-                echo "Building ${image}"
-                bat "docker build -t %image% ."
+                set IMAGE_TAG=%data.development.imageRepo%:%tagName%
+                bat "docker build -t %IMAGE_TAG% ."
                 }
                   }
               }
