@@ -42,11 +42,26 @@ pipeline {
         steps {
             script {
             dir("backend-app/shop-manager/"){
-                def image = "shop-master:${tagName}"
-                bat "docker build -t latest/shop-master-1.0 ."
+                def image = ${data.development.imageRepo}+":"+${tagName}
+                bat "docker build -t %image% ."
                 }
                   }
               }
-        }
+      }
+
+      stage('Push Docker Image to DEV ECR') {
+              steps {
+                    script{
+                        withAWS(
+                        roleAccount:"${data.development.account}",
+                        region:"${data.development.region}",
+                        useNode:true){
+                            dir("${data.parent.projectName}"){
+                            sh """aws ecr get-login-password --region ${data.development.region}
+                            }
+                        }
+                    }
+                }
+            }
   }
 }

@@ -1,5 +1,13 @@
 parent:
   projectName: shop-master
+
+development:
+  cluster_name: shop-master-1.0
+  namespace: default
+  account: 597377242795
+  role:
+  region: us-east-1e
+  imageRepo: 597377242795.dkr.ecr.us-east-1.amazonaws.com/shop-master
 maven:
   javaHome: $JAVA_HOME_ZULU8_X64
   mvnHome: /usr/share/maven
