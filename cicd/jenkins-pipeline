@@ -42,8 +42,8 @@ pipeline {
         steps {
             script {
             dir("backend-app/shop-manager/"){
-                set IMAGE_TAG=%data.development.imageRepo%:%tagName%
-                bat "docker build -t %IMAGE_TAG% ."
+                def image = data.development.imageRepo + ":" + tagName
+                bat "docker build -t %image% ."
                 }
                   }
               }
@@ -58,7 +58,7 @@ pipeline {
                             useNode:true
                         ){
                             dir("backend-app/shop-manager/"){
-                                def image = ${data.development.imageRepo}+":"+${tagName}
+                                def image = data.development.imageRepo + ":" + tagName
                                 bat 'aws ecr get-login-password --region %data.development.region% | docker login --username AWS --password-stdin %data.development.imageRepo%'
                                 bat 'docker push %image%'
                             }
