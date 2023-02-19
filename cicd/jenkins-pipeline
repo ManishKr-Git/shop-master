@@ -43,6 +43,7 @@ pipeline {
             script {
             dir("backend-app/shop-manager/"){
                 def image = %data.development.imageRepo%+":"+%tagName%
+                echo "Building ${image}"
                 bat "docker build -t %image% ."
                 }
                   }
