@@ -49,22 +49,22 @@ pipeline {
         }
       }
 
-      stage('Push Docker Image to DEV ECR') {
-              steps {
-                      script{
-                        withAWS(
-                            roleAccount: "${data.development.account}",
-                            region: "${data.development.region}",
-                            useNode:true
-                        ){
-                            dir("backend-app/shop-manager/"){
-                                def IMAGE_TAG=%data.development.imageRepo%:%tagName%
-                                bat 'aws ecr get-login-password --region %data.development.region% | docker login --username AWS --password-stdin %data.development.imageRepo%'
-                                bat 'docker push %image%'
-                            }
-                        }
-                      }
-                    }
-            }
+      // stage('Push Docker Image to DEV ECR') {
+      //         steps {
+      //                 script{
+      //                   withAWS(
+      //                       roleAccount: "${data.development.account}",
+      //                       region: "${data.development.region}",
+      //                       useNode:true
+      //                   ){
+      //                       dir("backend-app/shop-manager/"){
+      //                           def IMAGE_TAG=%data.development.imageRepo%:%tagName%
+      //                           bat 'aws ecr get-login-password --region %data.development.region% | docker login --username AWS --password-stdin %data.development.imageRepo%'
+      //                           bat 'docker push %image%'
+      //                       }
+      //                   }
+      //                 }
+      //               }
+      //       }
   }
 }
