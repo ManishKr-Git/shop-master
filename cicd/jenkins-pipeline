@@ -1,5 +1,5 @@
-def tagName="latest"
-def branchName="master"
+def tagName = 'latest'
+def branchName = 'master'
 
 pipeline {
   agent any
@@ -9,62 +9,62 @@ pipeline {
   }
 
   stages {
-      stage('Checkout') {
+    stage('Checkout') {
         steps {
-            echo "***Branch:"+branchName+"***"
-            echo "***Tag:"+tagName+"***"
-            //checkout SCM
-            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false,
-            extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-credentials',
+            echo '***Branch:' + branchName + '***'
+            echo '***Tag:' + tagName + '***'
+        //checkout SCM
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false,
+          extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'github-credentials',
             url: 'https://github.com/ManishKr-Git/shop-master.git']]])
-        }
       }
+    }
 
-      stage('Reading properties file') {
-        steps{
-            script {data = readYaml file: 'cicd/pipeline-properties.yaml'}
-            echo "loading file...."
-        }
+    stage('Reading properties file') {
+        steps {
+            script { data = readYaml file: 'cicd/pipeline-properties.yaml' }
+            echo 'loading file....'
       }
+    }
 
-      stage('BUILD'){
-        steps{
+    stage('BUILD') {
+        steps {
             echo "Building ${data.parent.projectName}"
-            dir("backend-app/shop-manager/"){
-                bat './mvnw clean install'
-                echo "loading file...."
-            }
-            echo "Build is successful"
+        dir('backend-app/shop-manager/') {
+          bat './mvnw clean install'
+          echo 'loading file....'
         }
+            echo 'Build is successful'
       }
+    }
 
-      stage('Build Docker Image') {
+    stage('Build Docker Image') {
         steps {
             script {
-            dir("backend-app/shop-manager/"){
-                def image = data.development.imageRepo + ":" + tagName
-                bat "docker build -t %image% ."
-                }
-                  }
-              }
+          dir('backend-app/shop-manager/') {
+                def image = data.development.imageRepo + ':' + tagName
+                bat "docker build -t ${image} ."
+          }
+        }
       }
+    }
 
-      stage('Push Docker Image to DEV ECR') {
-              steps {
-                      script{
-                        withAWS(
-                            roleAccount: "${data.development.account}",
-                            region: "${data.development.region}",
-                            useNode:true
-                        ){
-                            dir("backend-app/shop-manager/"){
-                                def image = data.development.imageRepo + ":" + tagName
-                                bat 'aws ecr get-login-password --region %data.development.region% | docker login --username AWS --password-stdin %data.development.imageRepo%'
-                                bat 'docker push %image%'
-                            }
-                        }
-                      }
-                    }
+    stage('Push Docker Image to DEV ECR') {
+      steps {
+        script {
+          withAWS(
+            roleAccount: "${data.development.account}",
+            region: "${data.development.region}",
+            useNode: true
+          ) {
+            dir('backend-app/shop-manager/') {
+              def image = data.development.imageRepo + ':' + tagName
+              bat 'aws ecr get-login-password --region %data.development.region% | docker login --username AWS --password-stdin %data.development.imageRepo%'
+              bat 'docker push %image%'
             }
+          }
+        }
+      }
+    }
   }
 }
