@@ -40,13 +40,13 @@ pipeline {
 
       stage('Build Docker Image') {
         steps {
-            script {
-            dir("backend-app/shop-manager/"){
-                def IMAGE_TAG=%data.development.imageRepo%:%tagName%
-                bat "docker build -t %IMAGE_TAG% ."
-                }
-                  }
-              }
+          script {
+            dir("backend-app/shop-manager/") {
+              def image = data.development.imageRepo + ":" + tagName
+              bat "docker build -t ${image} ."
+            }
+          }
+        }
       }
 
       stage('Push Docker Image to DEV ECR') {
