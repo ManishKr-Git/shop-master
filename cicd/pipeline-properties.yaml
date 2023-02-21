@@ -6,7 +6,7 @@ development:
   namespace: default
   account: 597377242795
   role:
-  region: us-east-1e
+  region: us-east-1
   imageRepo: 597377242795.dkr.ecr.us-east-1.amazonaws.com/shop-master
 maven:
   javaHome: $JAVA_HOME_ZULU8_X64
